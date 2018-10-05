@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8">
+<title>This is Template</title>
+
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    const url = "https://ferret-plus.com"
+
+    // XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", url, true);
+    xhr.onreadystatechange = function() {
+      if(xhr.readyState === 4 && xhr.status === 200) {
+        $("#message1").html("XMLHttpRequest")
+      }
+    }
+    xhr.send()
+
+    //ajax
+    $.ajax({
+      url: url,
+      method: "GET"
+    }).done(function() {
+      $("#message2").html("jquery ajax")
+    })
+
+
+    //fetch
+    fetch('https://ferret-plus.com').then(response => {
+      $("#message3").html("fetch ajax")
+      return response.text();
+    }).then(json => {
+      console.log('json:', json); // json : { name : 'Yohei' }
+    });
+
+  })
+</script>
+</head>
+<body>
+  <p id="message1"></p>
+  <p id="message2"></p>
+  <p id="message3"></p>
+</body>
+</html>
+
