@@ -4,20 +4,29 @@
 <meta name="robots" content="noindex,nofollow" />
 <meta charset="UTF-8">
 <title>This is Template</title>
-
-<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
+<script src="node_modules/axios/dist/axios.min.js"></script>
+<script src="node_modules/jquery/dist/jquery.min.js"></script>
 
 <script type="text/javascript">
   $(document).ready(function(){
-    const url = "https://ferret-plus.com"
+    const url = "https://s3-ap-northeast-1.amazonaws.com/awsyk/sample.json"
 
     // XMLHttpRequest
     const xhr = new XMLHttpRequest();
     xhr.open("GET", url, true);
     xhr.onreadystatechange = function() {
-      if(xhr.readyState === 4 && xhr.status === 200) {
-        $("#message1").html("XMLHttpRequest")
+      if(xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          $("#message1").html("success XMLHttpRequest")
+          console.log(xhr.responseText);
+        }else{
+          console.log(xhr.status);
+          console.error("通信エラー")
+        }
       }
+    }
+    xhr.onerror = function() {
+      console.error("通信エラー")
     }
     xhr.send()
 
@@ -25,17 +34,37 @@
     $.ajax({
       url: url,
       method: "GET"
-    }).done(function() {
-      $("#message2").html("jquery ajax")
+    }).done(function(data, textStatus, jqXHR) {
+      $("#message2").html("success jquery ajax")
+      console.log(data)
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+      $("#message2").html("error jquery ajax")
+      console.error(errorThrown)
     })
+
+    //axios
+    axios
+      .get(url + "err")
+      .then(function (res) {
+        console.log("axios")
+        console.log(res.data)
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
 
 
     //fetch
-    fetch('https://ferret-plus.com').then(response => {
+    fetch(url + "error").then(response => {
       $("#message3").html("fetch ajax")
+      if(response.status != 200) {
+        return Promise.reject("認証エラー")
+      }
       return response.text();
     }).then(json => {
       console.log('json:', json); // json : { name : 'Yohei' }
+    }).catch((e) => {
+      console.error(e)
     });
 
   })

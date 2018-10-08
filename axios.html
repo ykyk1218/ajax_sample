@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8">
+<title>This is Template</title>
+<script src="node_modules/axios/dist/axios.min.js"></script>
+</head>
+  <body>
+    <input type="button" id="btn" value="ボタン" />
+    <script type="text/javascript">
+      const btn = document.querySelector("#btn")
+      event = document.createEvent( "MouseEvents" )
+      event.initEvent("autoClick", false, true)
+      btn.addEventListener('autoClick', callAjax)
+      btn.dispatchEvent(event)
+      let globalCounter = 0
+      let result = 0
+
+      function callAjax(event) {
+        const startTime = performance.now()
+        const url = "/sample.json"
+        //axios
+        axios
+          .get(url)
+          .then((res) => {
+            const endTime = performance.now()
+            result += endTime - startTime
+            globalCounter += 1
+            if(globalCounter < 199) {
+              callAjax(event)
+            }else{
+              console.log(result / 200)
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    </script>
+
+  </body>
+</html>
