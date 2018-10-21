@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="robots" content="noindex,nofollow" />
+<meta charset="UTF-8">
+<title>This is Template</title>
+<script src="node_modules/axios/dist/axios.min.js"></script>
+</head>
+  <body>
+    <input type="button" id="btn" value="ボタン" />
+    <script type="text/javascript">
+      const btn = document.querySelector("#btn")
+      event = document.createEvent( "MouseEvents" )
+      event.initEvent("autoClick", false, true)
+      btn.addEventListener('autoClick', callAjax)
+      btn.dispatchEvent(event)
+
+      function callAjax(event) {
+        let result = 0
+        let charsReceived = 0
+        const url = "/sample.json"
+
+        fetch(url).then(response => {
+          const reader = response.body.getReader()
+          reader.read().then(function processText({done, value}) {
+            if(done) {
+              console.log("stream complete")
+            }
+            charsReceived += value.length
+            const chunk = value
+            console.log("Received " + charsReceived + " Current chunk=" + chunk)
+            result += chunk
+            return reader.read().then(processText)
+          })
+
+        }).catch((e) => {
+          console.error(e)
+        });
+      }
+    </script>
+
+  </body>
+</html>
