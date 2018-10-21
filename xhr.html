@@ -18,21 +18,26 @@
 
       function callAjax(event) {
         const startTime = performance.now()
-        const url = "/sample.json"
-        fetch(url).then(response => {
-          const endTime = performance.now()
-          result += endTime - startTime
-          globalCounter += 1
-          if(globalCounter < 199) {
-            callAjax(event)
-          }else{
-            console.log(result / 200)
+        const url="/sample.json"
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.send()
+        xhr.onreadystatechange = () => {
+          if(xhr.readyState === 4) {
+            const endTime = performance.now()
+            result += endTime - startTime
+            globalCounter += 1
+            if(globalCounter < 199) {
+              callAjax(event)
+            }else{
+              console.log(result / 200)
+            }
           }
-        }).catch((e) => {
+        }
+        xhr.onerror = function(e) {
           console.error(e)
-        });
+        }
       }
     </script>
-
   </body>
 </html>
